@@ -21,8 +21,8 @@
 
   <!-- endinject -->
 </head>
-<body>
-  <nav class="app-navbar initialized minimized">
+<body ng-app="app" ng-controller="MainController">
+  <nav class="app-navbar initialized" ng-controller="NavbarController" ng-class="{minimized: !search}">
     <div class="app-logo">
       <a href="">
         <i class="fa fa-spotify"></i> Spotify browser
@@ -30,10 +30,12 @@
     </div>
     <div class="app-search">
       <input type="text"
-             placeholder="search..." >
+             placeholder="search..."
+             ng-model="search">
       <button type="button"
               class="input-clear"
-              tabindex="-1">
+              tabindex="-1"
+              ng-click="clearSearch()">
         <i class="fa fa-times"></i>
       </button>
     </div>
@@ -45,13 +47,14 @@
       <h1>Albums</h1>
       <h2>156 found</h2>
     </header>
-    <div class="tiles-container">
-      <a class="tile thumb-m" title="Album" href="album/index.html"></a>
-      <a class="tile thumb-m" title="Album" href="album/index.html"></a>
-      <a class="tile thumb-m" title="Album" href="album/index.html"></a>
-      <a class="tile thumb-m" title="Album" href="album/index.html"></a>
-      <a class="tile thumb-m" title="Album" href="album/index.html"></a>
-      <a class="tile thumb-m" title="Album" href="album/index.html"></a>
+    <div class="tiles-container" ng-controller="AlbumController">
+      <a
+      ng-repeat="album in searchResults.albums.items"
+      ng-style="{'background-image': 'url({{album.images[1].url}})'}"
+      class="tile thumb-m"
+      title="{{album.name}}"
+      href="albums/{{album.id}}">
+      </a>
     </div>
   </section>
 
@@ -61,12 +64,13 @@
       <h2>32 found</h2>
     </header>
     <div class="tiles-container">
-      <a class="tile thumb-m" title="Artist" href="artist/index.html"></a>
-      <a class="tile thumb-m" title="Artist" href="artist/index.html"></a>
-      <a class="tile thumb-m" title="Artist" href="artist/index.html"></a>
-      <a class="tile thumb-m" title="Artist" href="artist/index.html"></a>
-      <a class="tile thumb-m" title="Artist" href="artist/index.html"></a>
-      <a class="tile thumb-m" title="Artist" href="artist/index.html"></a>
+      <a
+        ng-repeat="artist in searchResults.artists.items"
+        ng-style="{'background-image': 'url({{artist.images[1].url}})'}"
+        class="tile thumb-m"
+        title="{{artist.name}}"
+        href="artist/{{artist.id}}">
+      </a>
     </div>
   </section>
 
@@ -76,7 +80,7 @@
       <h2>1788 found</h2>
     </header>
     <table class="tracks-table">
-      <tr>
+      <tr ng-controller="TrackController" ng-repeat="track in searchResults.tracks.items">
         <td>
           <button class="play-button">
             <div class="icon-background">
@@ -84,36 +88,10 @@
             </div>
           </button>
         </td>
-        <td><a href="album/index.html">Track</a></td>
-        <td><a href="album/index.html">Album</a></td>
-        <td><a href="artist/index.html">Artist</a></td>
-        <td class="">9:59</td>
-      </tr>
-      <tr>
-        <td>
-          <button class="play-button">
-            <div class="icon-background">
-              <i class="fa fa-play"></i>
-            </div>
-          </button>
-        </td>
-        <td><a href="album/index.html">Track</a></td>
-        <td><a href="album/index.html">Album</a></td>
-        <td><a href="artist/index.html">Artist</a></td>
-        <td class="">9:59</td>
-      </tr>
-      <tr>
-        <td>
-          <button class="play-button">
-            <div class="icon-background">
-              <i class="fa fa-play"></i>
-            </div>
-          </button>
-        </td>
-        <td><a href="album/index.html">Track</a></td>
-        <td><a href="album/index.html">Album</a></td>
-        <td><a href="artist/index.html">Artist</a></td>
-        <td class="">9:59</td>
+        <td><a href="album/index.html">{{track.name}}</a></td>
+        <td><a href="album/index.html">{{track.album.name}}</a></td>
+        <td><a href="artist/index.html">{{track.duration_ms}}</a></td>
+        <td class=""></td>
       </tr>
     </tbody></table>
   </section>
@@ -127,6 +105,9 @@
 
   <!-- app logic -->
   <script src="./app/app.js"></script>
+  <script src="./routes/album/album.js"></script>
+  <script src="./routes/album/track.js"></script>
+  <script src="./navbar/navbar.js"></script>
   <!-- inject:js -->
 
   <!-- app scripts go here! -->
