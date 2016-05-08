@@ -22,7 +22,7 @@
   <!-- endinject -->
 </head>
 <body ng-app="app" ng-controller="MainController">
-  <nav class="app-navbar initialized" ng-controller="NavbarController" ng-class="{minimized: !search}">
+  <nav class="app-navbar initialized" ng-class="{minimized: !search}">
     <div class="app-logo">
       <a href="">
         <i class="fa fa-spotify"></i> Spotify browser
@@ -49,7 +49,7 @@
     </header>
     <div class="tiles-container" ng-controller="AlbumController">
       <a
-      ng-repeat="album in searchResults.albums.items"
+      ng-repeat="album in searchResults.albums.items | filter:{name:search} |orderBy:'name' | limitTo:5"
       ng-style="{'background-image': 'url({{album.images[1].url}})'}"
       class="tile thumb-m"
       title="{{album.name}}"
@@ -65,7 +65,7 @@
     </header>
     <div class="tiles-container">
       <a
-        ng-repeat="artist in searchResults.artists.items"
+        ng-repeat="artist in searchResults.artists.items | filter:{name:search} | orderBy:'name' | limitTo:5"
         ng-style="{'background-image': 'url({{artist.images[1].url}})'}"
         class="tile thumb-m"
         title="{{artist.name}}"
@@ -80,7 +80,7 @@
       <h2>1788 found</h2>
     </header>
     <table class="tracks-table">
-      <tr ng-controller="TrackController" ng-repeat="track in searchResults.tracks.items">
+      <tr ng-controller="TrackController" ng-repeat="track in searchResults.tracks.items | filter:{name:search} | orderBy:'name' | limitTo:5">
         <td>
           <button class="play-button">
             <div class="icon-background">
@@ -88,9 +88,9 @@
             </div>
           </button>
         </td>
-        <td><a href="album/index.html">{{track.name}}</a></td>
+        <td><a href="album/index.html">{{track.name | uppercase}}</a></td>
         <td><a href="album/index.html">{{track.album.name}}</a></td>
-        <td><a href="artist/index.html">{{track.duration_ms}}</a></td>
+        <td><a href="artist/index.html">{{track.duration_ms | durationTime}}</a></td>
         <td class=""></td>
       </tr>
     </tbody></table>
@@ -107,7 +107,8 @@
   <script src="./app/app.js"></script>
   <script src="./routes/album/album.js"></script>
   <script src="./routes/album/track.js"></script>
-  <script src="./navbar/navbar.js"></script>
+  <!-- <script src="./navbar/navbar.js"></script> -->
+  <script src="./filters/duration.js"></script>
   <!-- inject:js -->
 
   <!-- app scripts go here! -->
